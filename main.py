@@ -96,8 +96,7 @@ Return for each student:
   "grades": [{{ "question_number": int, "grade": int }}],
   "overall_score": grade
 }}]
-The comment part should explain the grading.
-Only output valid JSON.
+Only output valid JSON format.
 """
 
     student_blocks = "\n".join([
