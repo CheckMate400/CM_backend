@@ -30,8 +30,6 @@ app.add_middleware(
 PROJECTS_DIR = "projects"
 os.makedirs(PROJECTS_DIR, exist_ok=True)
 
-client = openai.OpenAI()
-
 # --------- Helpers ---------
 
 def extract_text_from_pdf(file_path):
@@ -87,7 +85,7 @@ Number of questions: {num_questions}
 
 Reference solution:
 {solution_text if solution_text else '[NO SOLUTION GIVEN — use your own knowledge]'}
-The solution maybe incomplete, so use your own knowledge as well to grade the exam.
+The solution may be incomplete, so use your own knowledge as well to grade the exam.
 
 Grade the following student exams. Each answer should be graded from 0 to 100.
 Adjust grading (if needed) so that the average score is approximately (10%) {expected_average if expected_average else 'natural'}.
@@ -95,10 +93,10 @@ Adjust grading (if needed) so that the average score is approximately (10%) {exp
 Return for each student:
 [{{
   "student": "filename",
-  "grades": [{{ "question_number": int, "grade": int}}],
+  "grades": [{{ "question_number": int, "grade": int }}],
   "overall_score": grade
 }}]
-The comment part should explain the grading
+The comment part should explain the grading.
 Only output valid JSON.
 """
 
@@ -109,13 +107,13 @@ Only output valid JSON.
     full_prompt = grading_prompt + "\n\n" + student_blocks
 
     try:
-        response = client.chat.completions.create(
+        response = openai.ChatCompletion.create(
             model="gpt-4",
             messages=[{"role": "user", "content": full_prompt}],
             temperature=0.0,
             max_tokens=4000
         )
-        gpt_output = response.choices[0].message.content.strip()
+        gpt_output = response['choices'][0]['message']['content'].strip()
 
         try:
             results = json.loads(gpt_output)
