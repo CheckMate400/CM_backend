@@ -2,7 +2,7 @@
 
 import os
 import json
-from models.project import ProjectCreate
+from models.project import ProjectCreateRequest
 
 PROJECTS_DIR = "projects"
 os.makedirs(PROJECTS_DIR, exist_ok=True)
