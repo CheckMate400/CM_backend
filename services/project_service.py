@@ -7,7 +7,7 @@ from models.project import ProjectCreateRequest
 PROJECTS_DIR = "projects"
 os.makedirs(PROJECTS_DIR, exist_ok=True)
 
-def handle_create_project(data: ProjectCreate):
+def handle_create_project(data: ProjectCreateRequest):
     folder_name = f"{data.project_name}_{data.subject}".replace(" ", "_")
     folder_path = os.path.join(PROJECTS_DIR, folder_name)
     os.makedirs(folder_path, exist_ok=True)
