@@ -33,3 +33,9 @@ async def create_project_route(
         solution_file=solution_file,
         test_files=test_files
     )
+
+
+@router.get("/")
+def list_projects():
+    from services.project_service import get_all_projects
+    return get_all_projects()
