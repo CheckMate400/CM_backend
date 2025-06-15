@@ -22,3 +22,43 @@ def handle_create_project(data: ProjectCreate):
         json.dump(metadata, f, ensure_ascii=False, indent=2)
 
     return {"message": "✅ Project created", "folder": folder_name}
+
+
+def get_all_projects():
+    project_list = []
+
+    if not os.path.exists(PROJECTS_DIR):
+        return []
+
+    for folder_name in os.listdir(PROJECTS_DIR):
+        folder_path = os.path.join(PROJECTS_DIR, folder_name)
+        meta_path = os.path.join(folder_path, "meta.json")
+        results_path = os.path.join(folder_path, "results.json")
+
+        try:
+            with open(meta_path, "r", encoding="utf-8") as f:
+                meta = json.load(f)
+            with open(results_path, "r", encoding="utf-8") as f:
+                results = json.load(f)
+
+            scores = [s["overall_score"] for s in results]
+            stats = {
+                "average": calculate_average(scores),
+                "median": calculate_median(scores),
+                "std_dev": calculate_std_dev(scores),
+                "grade_distribution": calculate_grade_distribution(scores),
+            }
+
+            project_list.append({
+                "project_id": folder_name,
+                "project_name": meta["name"],
+                "subject": meta["subject"],
+                "num_questions": meta["num_questions"],
+                "num_tests": len(scores),
+                "stats": stats,
+            })
+
+        except Exception as e:
+            print(f"❌ Error loading project {folder_name}:", e)
+
+    return project_list
